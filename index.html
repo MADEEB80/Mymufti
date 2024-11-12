@@ -1,4 +1,5 @@
-<html><head><base href="https://mymufti.com.eng/"><meta name="viewport" content="width=device-width">
+<html><head>
+
 <title>MyMufti - Islamic Guidance Platform</title>
 <style>
 * {
@@ -124,6 +125,8 @@ body {
   color: #4CAF50;
 }
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-auth-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
 <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
@@ -136,7 +139,8 @@ body {
       <path d="M10,25 Q25,10 40,25" stroke="#4CAF50" fill="none" stroke-width="2"/>
     </svg>
   </div>
-  
+  <div id="errorMessage" style="display: none; color: red;"></div>
+
   <div class="tabs">
     <div class="tab active" id="loginTab">Login</div>
     <div class="tab" id="signupTab">Sign Up</div>
@@ -156,7 +160,7 @@ body {
     <button type="submit" class="btn">Login</button>
     
     <div class="forgot-password">
-      <a href="https://mymufti.com.eng/forgot-password">Forgot Password?</a>
+      <a href="https://mymufti.com/forgot-password">Forgot Password?</a>
     </div>
   </form>
   
@@ -201,43 +205,6 @@ body {
   </div>
 </div>
 
-<script>
-document.getElementById('loginTab').addEventListener('click', function() {
-  this.classList.add('active');
-  document.getElementById('signupTab').classList.remove('active');
-  document.getElementById('loginForm').style.display = 'block';
-  document.getElementById('signupForm').style.display = 'none';
-});
+<script src="home.js"></script>
 
-document.getElementById('signupTab').addEventListener('click', function() {
-  this.classList.add('active');
-  document.getElementById('loginTab').classList.remove('active');
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('signupForm').style.display = 'block';
-});
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  // Add login logic here
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  console.log('Login attempt:', { email, password });
-});
-
-document.getElementById('signupForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  // Add signup logic here
-  const fullName = document.getElementById('fullName').value;
-  const email = document.getElementById('signupEmail').value;
-  const password = document.getElementById('signupPassword').value;
-  const confirmPassword = document.getElementById('confirmPassword').value;
-  
-  if (password !== confirmPassword) {
-    alert('Passwords do not match!');
-    return;
-  }
-  
-  console.log('Signup attempt:', { fullName, email, password });
-});
-</script>
 </body></html>
