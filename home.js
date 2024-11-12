@@ -33,7 +33,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       console.log("User logged in:", userCredential.user);
-      window.location.href = 'home.html';  // Redirect to home page on successful login
+      window.location.href = '/dashboard.html';  // Redirect to home page on successful login
     })
     .catch((error) => {
       console.error("Login error:", error);
@@ -57,7 +57,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       console.log("User signed up:", userCredential.user);
-      window.location.href = 'home.html';  // Redirect to home page on successful signup
+      window.location.href = '/dashboard.html';  // Redirect to home page on successful signup
     })
     .catch((error) => {
       console.error("Signup error:", error);
@@ -71,7 +71,7 @@ document.querySelectorAll('.social-btn')[0].addEventListener('click', () => {
   auth.signInWithPopup(provider)
     .then((result) => {
       console.log("Google login successful:", result.user);
-      window.location.href = 'home.html';  // Redirect to home page on successful login
+      window.location.href = '/dashboard.html';  // Redirect to home page on successful login
     })
     .catch((error) => {
       console.error("Google login error:", error);
@@ -85,7 +85,7 @@ document.querySelectorAll('.social-btn')[1].addEventListener('click', () => {
   auth.signInWithPopup(provider)
     .then((result) => {
       console.log("Facebook login successful:", result.user);
-      window.location.href = 'home.html';  // Redirect to home page on successful login
+      window.location.href = '/dashboard.html';  // Redirect to home page on successful login
     })
     .catch((error) => {
       console.error("Facebook login error:", error);
