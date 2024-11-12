@@ -139,7 +139,6 @@ body {
       <path d="M10,25 Q25,10 40,25" stroke="#4CAF50" fill="none" stroke-width="2"/>
     </svg>
   </div>
-  <div id="errorMessage" style="display: none; color: red;"></div>
 
   <div class="tabs">
     <div class="tab active" id="loginTab">Login</div>
@@ -147,6 +146,9 @@ body {
   </div>
   
   <form id="loginForm">
+      <div id="loginError" class="error-message" style="display: none; color: red;"></div>
+
+
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" required>
@@ -165,6 +167,9 @@ body {
   </form>
   
   <form id="signupForm" style="display: none;">
+<div id="signupError" class="error-message" style="display: none; color: red;"></div>
+
+
     <div class="form-group">
       <label for="fullName">Full Name</label>
       <input type="text" id="fullName" required>
