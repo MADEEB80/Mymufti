@@ -92,3 +92,33 @@ document.querySelectorAll('.social-btn')[1].addEventListener('click', () => {
       alert("Facebook login failed: " + error.message);  // Display error using alert
     });
 });
+
+
+
+
+// Get references to the HTML elements
+const fetchDataButton = document.getElementById('fetchDataButton');
+const titleDisplay = document.getElementById('title');
+const descriptionDisplay = document.getElementById('description');
+
+// Add event listener to the button
+fetchDataButton.addEventListener('click', () => {
+  // Specify the collection and document you want to fetch data from
+  const docRef = firebase.firestore().collection("Collection").doc("Mazhab");
+
+  // Fetch the document data
+  docRef.get()
+    .then((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        // Display the data in the HTML
+        titleDisplay.innerText = `Title: ${data.title}`;
+        descriptionDisplay.innerText = `Description: ${data.description}`;
+      } else {
+        console.log("No such document!");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+});
