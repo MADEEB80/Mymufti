@@ -52,36 +52,38 @@ fetchDataButton.addEventListener('click', async () => {
 });
 
 
-// Get references to the form and the textarea
-const questionForm = document.getElementById('questionForm');
-const questionInput = document.getElementById('question');
+document.addEventListener('DOMContentLoaded', () => {
+  // Your code here
+  const questionForm = document.getElementById('questionForm');
+  const questionInput = document.getElementById('question');
 
-questionForm.addEventListener('submit', async (event) => {
-  event.preventDefault(); // Prevent the form from reloading the page on submission
+  questionForm.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the form from reloading the page on submission
 
-  const questionText = questionInput.value.trim();
+    const questionText = questionInput.value.trim();
 
-  if (questionText === "") {
-    alert("Please enter a question!");
-    return;
-  }
+    if (questionText === "") {
+      alert("Please enter a question!");
+      return;
+    }
 
-  try {
-    // Add the question to Firestore
-    const docRef = await addDoc(collection(db, "Questions"), {
-      question: questionText,
-      createdAt: new Date(),
-    });
+    try {
+      // Add the question to Firestore
+      const docRef = await addDoc(collection(db, "Questions"), {
+        question: questionText,
+        createdAt: new Date(),
+      });
 
-    console.log("Document written with ID: ", docRef.id);
+      console.log("Document written with ID: ", docRef.id);
 
-    // Provide feedback to the user
-    alert("Your question has been submitted successfully!");
+      // Provide feedback to the user
+      alert("Your question has been submitted successfully!");
 
-    // Optionally clear the form
-    questionInput.value = "";
-  } catch (error) {
-    console.error("Error adding document: ", error);
-    alert("There was an error submitting your question. Please try again.");
-  }
+      // Optionally clear the form
+      questionInput.value = "";
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("There was an error submitting your question. Please try again.");
+    }
+  });
 });
