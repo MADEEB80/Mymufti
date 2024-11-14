@@ -1,8 +1,8 @@
-// Import the necessary Firebase modules
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
-// Firebase Configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
   authDomain: "mymufti1080.firebaseapp.com",
@@ -17,46 +17,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Get references to the HTML elements
+// DOM references
 const fetchDataButton = document.getElementById('fetchDataButton');
 const titleDisplay = document.getElementById('title');
 const descriptionDisplay = document.getElementById('description');
 const questionDisplay = document.getElementById('question');
 const answerDisplay = document.getElementById('answer');
 
+// Fetch document data and display
 fetchDataButton.addEventListener('click', async () => {
-  // Reference to the 'Toheed' document inside the 'Mazhab' collection
   const docRef = doc(db, "Mazhab", "Toheed");
-
-  console.log("Fetching document:", docRef.path);  // Log the correct document path
+  console.log("Fetching document:", docRef.path);
 
   try {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      console.log("Document data:", data);  // Log the fetched data
+      console.log("Document data:", data);
       titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
       descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
       questionDisplay.innerText = `Question: ${data.Question || "No question available"}`;
       answerDisplay.innerText = `Answer: ${data.Answer || "No answer available"}`;
     } else {
-      console.log("No such document!");  // Log when the document is not found
+      console.log("No such document found.");
       titleDisplay.innerText = "Document not found";
-      descriptionDisplay.innerText = "Please check if the 'Mazhab' collection and 'Toheed' document exist.";
+      descriptionDisplay.innerText = "Please ensure 'Mazhab' collection and 'Toheed' document exist.";
     }
   } catch (error) {
-    console.error("Error fetching data:", error);  // Log any errors
+    console.error("Error fetching data:", error);
     titleDisplay.innerText = "Error fetching data";
     descriptionDisplay.innerText = `Error: ${error.message}`;
   }
 });
 
-
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-  if (typeof db === "undefined" || !db) {
-    console.error("Firestore not initialized. Please check your configuration.");
+// Handle question form submission
+document.addEventListener('DOMContentLoaded', () => {
+  if (!db) {
+    console.error("Firestore not initialized. Check your configuration.");
     return;
   }
 
@@ -64,22 +61,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionInput = document.getElementById('question');
   const submitButton = questionForm?.querySelector('button[type="submit"]');
 
-  // Check if questionInput is defined
-  if (!questionInput) {
-    console.error("Element with ID 'question' not found.");
-    return;
-  }
-
   questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form submission from reloading the page
-
-    console.log("questionInput:", questionInput); // Log questionInput to check if it's defined
-    console.log("questionInput.value:", questionInput.value); // Log the value of questionInput
+    event.preventDefault();
 
     const questionText = questionInput.value.trim();
-
-    if (questionText === "") {
-      alert("Please enter a question!");
+    if (!questionText) {
+      alert("Please enter a question.");
       return;
     }
 
@@ -91,12 +78,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         question: questionText,
         createdAt: new Date(),
       });
-
-      console.log("Document written with ID: ", docRef.id);
+      console.log("Document written with ID:", docRef.id);
       alert("Your question has been submitted successfully!");
-      questionInput.value = ""; // Clear the form
+      questionInput.value = "";
     } catch (error) {
-      console.error("Error adding document: ", error);
+      console.error("Error adding document:", error);
       alert("There was an error submitting your question. Please try again.");
     } finally {
       submitButton.disabled = false;
