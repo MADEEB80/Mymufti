@@ -50,55 +50,39 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
-// Handle question form submission
-document.addEventListener('DOMContentLoaded', () => {
-  if (!db) {
-    console.error("Firestore not initialized. Check your configuration.");
+document.addEventListener('DOMContentLoaded', async () => {
+  const questionForm = document.getElementById('questionForm');
+  const questionInput = document.getElementById('question');
+
+  // Check if questionInput is properly defined
+  if (!questionInput) {
+    console.error("Element with ID 'question' not found.");
     return;
   }
-	
-	const questionInput = document.querySelector('textarea#question');
-	
-	if (!questionInput) {
-	
-	console.error("Textarea with ID 'question' not found.");
-	
-	return;
-	
-	}
-	
-	
-  const questionForm = document.getElementById('questionForm');
-  const submitButton = questionForm?.querySelector('button[type="submit"]');
-
-
 
   questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent form submission from reloading the page
 
-	const questionText = questionInput?.value?.trim();
+    // Trimmed value of questionInput
+    const questionText = questionInput.value?.trim(); 
     if (!questionText) {
-      alert("Please enter a question.");
+      alert("Please enter a question!");
       return;
     }
 
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
-
+    // Proceed with submission logic if questionText is valid
     try {
       const docRef = await addDoc(collection(db, "Questions"), {
         question: questionText,
         createdAt: new Date(),
       });
-      console.log("Document written with ID:", docRef.id);
+
+      console.log("Document written with ID: ", docRef.id);
       alert("Your question has been submitted successfully!");
-      questionInput.value = "";
+      questionInput.value = ""; // Clear the form
     } catch (error) {
-      console.error("Error adding document:", error);
+      console.error("Error adding document: ", error);
       alert("There was an error submitting your question. Please try again.");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Submit Question";
     }
   });
 });
