@@ -33,7 +33,7 @@ fetchDataButton.addEventListener('click', async () => {
     if (docSnap.exists()) {
       const data = docSnap.data();
       // Display the data in the HTML
-      titleDisplay.innerText = `Title: ${data}`;
+      titleDisplay.innerText = `Title: ${data.text}`;
       descriptionDisplay.innerText = `Description: ${data.answer}`;
     } else {
       console.log("No such document!");
