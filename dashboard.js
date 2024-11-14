@@ -1,6 +1,6 @@
-// Import the Firebase modules
+// Import the necessary Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -17,43 +17,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Get references to the HTML elements
-const fetchDataButton = document.getElementById('fetchDataButton');
-const titleDisplay = document.getElementById('title');
-const descriptionDisplay = document.getElementById('description');
+// Initialize collection reference
+const colRef = collection(db, "Mazhab");
 
-// Collection reference
-const docRef = doc(db, "Mazhab", "Toheed");
-
-// Fetch and log collection data (optional for debugging)
+// Fetch collection data
 getDocs(colRef)
   .then((snapshot) => {
-    console.log("Collection Data:", snapshot.docs);
+    snapshot.docs.forEach(doc => {
+      console.log(doc.id, " => ", doc.data()); // Handle each document in the collection
+    });
   })
   .catch((error) => {
     console.error("Error fetching collection data:", error);
   });
-fetchDataButton.addEventListener('click', async () => {
-  // Reference to the 'Toheed' document in the 'Mazhab' collection
-  const docRef = doc(db, "Mazhab", "Toheed");
-
-  console.log("Fetching document:", docRef.path);  // Log the document reference path
-
-  try {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      console.log("Document data:", data);  // Log the document data
-      titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
-      descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
-    } else {
-      console.log("No such document!");  // Log the failure case
-      titleDisplay.innerText = "Document not found";
-      descriptionDisplay.innerText = "Please check if the 'Mazhab' collection and 'Toheed' document exist.";
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);  // Log any errors
-    titleDisplay.innerText = "Error fetching data";
-    descriptionDisplay.innerText = `Error: ${error.message}`;
-  }
-});
