@@ -23,7 +23,7 @@ const titleDisplay = document.getElementById('title');
 const descriptionDisplay = document.getElementById('description');
 
 // Collection reference
-const colRef = collection(db, "Mazhab");
+const docRef = doc(db, "Mazhab", "Toheed");
 
 // Fetch and log collection data (optional for debugging)
 getDocs(colRef)
