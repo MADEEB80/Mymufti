@@ -219,11 +219,31 @@ body {
     </div>
   </div>
 </div>
+
     <script>
-        // Event listener to show the iframe when the button is clicked
+        // Event listener to create and open the new HTML page
         document.getElementById('showSheetBtn').addEventListener('click', function() {
-            // Change the display style to show the iframe container
-            document.getElementById('iframeContainer').style.display = 'block';
+            // Create the new page content as a string
+            const newPageContent = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>New Google Sheet Page</title>
+                </head>
+                <body>
+                    <h1>Welcome to the Google Sheet Viewer</h1>
+                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTjCWtxZ94wEDAulmIg1jU5PUTXIcEpd0kwchs_CyU37FaExTYYohyhJHolIOJaSmBP-RFgVUDkJQDO/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" 
+                            width="100%" height="600px"></iframe>
+                </body>
+                </html>
+            `;
+
+            // Open a new window and write the content into it
+            const newWindow = window.open();
+            newWindow.document.write(newPageContent);
+            newWindow.document.close();  // Close the document to finish loading
         });
     </script>
 <script src="home.js"></script>
