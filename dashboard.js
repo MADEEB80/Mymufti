@@ -24,6 +24,31 @@ const descriptionDisplay = document.getElementById('description');
 const questionDisplay = document.getElementById('question');
 const answerDisplay = document.getElementById('answer');
 
+// Fetch document data and display
+fetchDataButton.addEventListener('click', async () => {
+  const docRef = doc(db, "Mazhab", "Toheed");
+  console.log("Fetching document:", docRef.path);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      console.log("Document data:", data);
+      titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
+      descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
+      questionDisplay.innerText = `Question: ${data.Question || "No question available"}`;
+      answerDisplay.innerText = `Answer: ${data.Answer || "No answer available"}`;
+    } else {
+      console.log("No such document found.");
+      titleDisplay.innerText = "Document not found";
+      descriptionDisplay.innerText = "Please ensure 'Mazhab' collection and 'Toheed' document exist.";
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    titleDisplay.innerText = "Error fetching data";
+    descriptionDisplay.innerText = `Error: ${error.message}`;
+  }
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   const questionForm = document.getElementById('questionForm');
