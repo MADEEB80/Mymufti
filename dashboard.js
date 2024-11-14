@@ -25,10 +25,10 @@ const descriptionDisplay = document.getElementById('description');
 // Collection reference
 const colRef = collection(db, "Mazhab");
 
-// Get collection data (optional: log the collection data for debugging)
+// Fetch and log collection data (optional for debugging)
 getDocs(colRef)
   .then((snapshot) => {
-    console.log(snapshot.docs);
+    console.log("Collection Data:", snapshot.docs);
   })
   .catch((error) => {
     console.error("Error fetching collection data:", error);
@@ -39,14 +39,17 @@ fetchDataButton.addEventListener('click', async () => {
   // Specify the collection and document to fetch data from
   const docRef = doc(db, "Toheed", "Mazhab");
 
-  // Fetch the document data
   try {
+    // Fetch the document data
     const docSnap = await getDoc(docRef);
+
+    // Check if the document exists
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // Display the data in the HTML
-      titleDisplay.innerText = `Title: ${data.title}`;
-      descriptionDisplay.innerText = `Description: ${data.description}`;
+      // Display the fetched data in the HTML
+      titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
+      descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
+      console.log("Document data:", data);
     } else {
       console.log("No such document!");
       titleDisplay.innerText = "Document not found";
