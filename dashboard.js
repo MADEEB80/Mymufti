@@ -25,7 +25,7 @@ const descriptionDisplay = document.getElementById('description');
 // Add event listener to the button
 fetchDataButton.addEventListener('click', async () => {
   // Specify the collection and document to fetch data from
-  const docRef = doc(db, "Toheed", "Mazhab");
+  const docRef = doc(db, "Mazhab", "Toheed");
 
   // Fetch the document data
   try {
