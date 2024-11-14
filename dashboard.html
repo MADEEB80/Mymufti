@@ -184,32 +184,6 @@ footer {
   </div>
 </footer>
 
-<script>
-document.getElementById('questionForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const question = document.getElementById('question').value;
-  
-  if(question.trim() === '') {
-    alert('Please enter your question');
-    return;
-  }
-  
-  // Here you would typically send the question to your backend
-  alert('Thank you for your question. Our scholars will respond within 48 hours.');
-  document.getElementById('question').value = '';
-});
-
-// Add smooth scrolling
-document.querySelectorAll('a[href^="https://mymufti.com"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.querySelector(this.getAttribute('href')).scrollIntoView({
-      behavior: 'smooth'
-    });
-  });
-});
-</script>
-
   <script type="module" src="dashboard.js"></script>
 
 </body>
