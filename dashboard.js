@@ -34,19 +34,15 @@ getDocs(colRef)
     console.error("Error fetching collection data:", error);
   });
 
-// Add event listener to the button
 fetchDataButton.addEventListener('click', async () => {
-  // Specify the collection and document to fetch data from
   const docRef = doc(db, "Toheed", "Mazhab");
 
-  try {
-    // Fetch the document data
-    const docSnap = await getDoc(docRef);
+  console.log("Fetching document:", docRef.path);  // Log the document reference path
 
-    // Check if the document exists
+  try {
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // Display the fetched data in the HTML
       titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
       descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
       console.log("Document data:", data);
