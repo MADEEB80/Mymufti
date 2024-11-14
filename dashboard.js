@@ -54,23 +54,28 @@ fetchDataButton.addEventListener('click', async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Check Firestore initialization
-  if (!window.db) {
+  if (typeof db === "undefined" || !db) {
     console.error("Firestore not initialized. Please check your configuration.");
     return;
   }
 
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
+  const submitButton = questionForm.querySelector('button[type="submit"]');
 
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from reloading the page on submission
 
     const questionText = questionInput.value.trim();
-
+    
     if (questionText === "") {
       alert("Please enter a question!");
       return;
     }
+
+    // Disable submit button and show loading text
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
 
     try {
       // Add the question to Firestore
@@ -84,11 +89,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Provide feedback to the user
       alert("Your question has been submitted successfully!");
 
-      // Optionally clear the form
+      // Clear the form
       questionInput.value = "";
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("There was an error submitting your question. Please try again.");
+    } finally {
+      // Re-enable the submit button and reset its text
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit Question";
     }
   });
 });
