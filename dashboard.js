@@ -51,9 +51,7 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
-
 document.addEventListener('DOMContentLoaded', async () => {
-  // Check Firestore initialization
   if (typeof db === "undefined" || !db) {
     console.error("Firestore not initialized. Please check your configuration.");
     return;
@@ -63,39 +61,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionInput = document.getElementById('question');
   const submitButton = questionForm.querySelector('button[type="submit"]');
 
+  // Check if questionInput is defined
+  if (!questionInput) {
+    console.error("Element with ID 'question' not found.");
+    return;
+  }
+
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from reloading the page on submission
 
-    const questionText = questionInput.value.trim();
-    
+    const questionText = questionInput.value ? questionInput.value.trim() : "";
+
     if (questionText === "") {
       alert("Please enter a question!");
       return;
     }
 
-    // Disable submit button and show loading text
     submitButton.disabled = true;
     submitButton.textContent = "Submitting...";
 
     try {
-      // Add the question to Firestore
       const docRef = await addDoc(collection(db, "Questions"), {
         question: questionText,
         createdAt: new Date(),
       });
 
       console.log("Document written with ID: ", docRef.id);
-
-      // Provide feedback to the user
       alert("Your question has been submitted successfully!");
-
-      // Clear the form
       questionInput.value = "";
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("There was an error submitting your question. Please try again.");
     } finally {
-      // Re-enable the submit button and reset its text
       submitButton.disabled = false;
       submitButton.textContent = "Submit Question";
     }
