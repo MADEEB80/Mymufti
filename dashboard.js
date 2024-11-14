@@ -55,7 +55,6 @@ fetchDataButton.addEventListener('click', async () => {
 
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Check Firestore initialization
   if (typeof db === "undefined" || !db) {
     console.error("Firestore not initialized. Please check your configuration.");
     return;
@@ -65,15 +64,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionInput = document.getElementById('question');
   const submitButton = questionForm?.querySelector('button[type="submit"]');
 
+  // Check if questionInput is defined
   if (!questionInput) {
     console.error("Element with ID 'question' not found.");
-    return; // Stop execution if questionInput is undefined
+    return;
   }
 
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form submission from reloading the page
 
-    const questionText = questionInput?.value?.trim() || ""; // Safely retrieve and trim the value
+    console.log("questionInput:", questionInput); // Log questionInput to check if it's defined
+    console.log("questionInput.value:", questionInput.value); // Log the value of questionInput
+
+    const questionText = questionInput.value.trim();
 
     if (questionText === "") {
       alert("Please enter a question!");
