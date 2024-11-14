@@ -1,3 +1,7 @@
+// Import the Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+
 // Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
@@ -21,7 +25,7 @@ const descriptionDisplay = document.getElementById('description');
 // Add event listener to the button
 fetchDataButton.addEventListener('click', async () => {
   // Specify the collection and document to fetch data from
-  const docRef = doc(db, "Toheed");
+  const docRef = doc(db, "Toheed", "Mazhab");
 
   // Fetch the document data
   try {
