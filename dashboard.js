@@ -52,8 +52,13 @@ fetchDataButton.addEventListener('click', async () => {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Your code here
+document.addEventListener('DOMContentLoaded', async () => {
+  // Check Firestore initialization
+  if (!window.db) {
+    console.error("Firestore not initialized. Please check your configuration.");
+    return;
+  }
+
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
 
