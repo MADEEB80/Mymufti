@@ -22,27 +22,22 @@ const fetchDataButton = document.getElementById('fetchDataButton');
 const titleDisplay = document.getElementById('title');
 const descriptionDisplay = document.getElementById('description');
 
-// Add event listener to the button
-fetchDataButton.addEventListener('click', async () => {
-  // Specify the collection and document to fetch data from
-  const docRef = doc(db, "Mazhab", "Toheed");
-
-  // Fetch the document data
-  try {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      // Display the data in the HTML
-      titleDisplay.innerText = `Title: ${data.text}`;
-      descriptionDisplay.innerText = `Description: ${data.answer}`;
-    } else {
-      console.log("No such document!");
-      titleDisplay.innerText = "Document not found";
-      descriptionDisplay.innerText = "Please check if the 'Toheed' collection and 'Mazhab' document exist.";
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    titleDisplay.innerText = "Error fetching data";
-    descriptionDisplay.innerText = `Error: ${error.message}`;
-  }
-});
+   // Add event listener to fetch data
+    fetchDataButton.addEventListener('click', async () => {
+      try {
+        // Fetch all collections
+        const querySnapshot = await getDocs(collection(db, "Toheed"));
+        
+        // If collections exist, loop through each document
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());  // Log document ID and data to console
+          titleDisplay.innerText = `Title: ${doc.data().title}`;  // Assuming "title" is a field
+          descriptionDisplay.innerText = `Description: ${doc.data().description}`;  // Assuming "description" is a field
+        });
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        titleDisplay.innerText = "Error fetching data";
+        descriptionDisplay.innerText = error.message;
+      }
+    });
