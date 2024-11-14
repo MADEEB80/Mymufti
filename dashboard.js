@@ -51,7 +51,11 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check Firestore initialization
   if (typeof db === "undefined" || !db) {
     console.error("Firestore not initialized. Please check your configuration.");
     return;
@@ -59,18 +63,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
-  const submitButton = questionForm.querySelector('button[type="submit"]');
+  const submitButton = questionForm?.querySelector('button[type="submit"]');
 
-  // Check if questionInput is defined
   if (!questionInput) {
     console.error("Element with ID 'question' not found.");
-    return;
+    return; // Stop execution if questionInput is undefined
   }
 
   questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent the form from reloading the page on submission
+    event.preventDefault(); // Prevent form submission from reloading the page
 
-    const questionText = questionInput.value ? questionInput.value.trim() : "";
+    const questionText = questionInput?.value?.trim() || ""; // Safely retrieve and trim the value
 
     if (questionText === "") {
       alert("Please enter a question!");
@@ -88,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       console.log("Document written with ID: ", docRef.id);
       alert("Your question has been submitted successfully!");
-      questionInput.value = "";
+      questionInput.value = ""; // Clear the form
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("There was an error submitting your question. Please try again.");
