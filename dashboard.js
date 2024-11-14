@@ -33,9 +33,9 @@ getDocs(colRef)
   .catch((error) => {
     console.error("Error fetching collection data:", error);
   });
-
 fetchDataButton.addEventListener('click', async () => {
-  const docRef = doc(db, "Toheed", "Mazhab");
+  // Reference to the 'Toheed' document in the 'Mazhab' collection
+  const docRef = doc(db, "Mazhab", "Toheed");
 
   console.log("Fetching document:", docRef.path);  // Log the document reference path
 
@@ -43,16 +43,16 @@ fetchDataButton.addEventListener('click', async () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+      console.log("Document data:", data);  // Log the document data
       titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
       descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
-      console.log("Document data:", data);
     } else {
-      console.log("No such document!");
+      console.log("No such document!");  // Log the failure case
       titleDisplay.innerText = "Document not found";
-      descriptionDisplay.innerText = "Please check if the 'Toheed' collection and 'Mazhab' document exist.";
+      descriptionDisplay.innerText = "Please check if the 'Mazhab' collection and 'Toheed' document exist.";
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching data:", error);  // Log any errors
     titleDisplay.innerText = "Error fetching data";
     descriptionDisplay.innerText = `Error: ${error.message}`;
   }
