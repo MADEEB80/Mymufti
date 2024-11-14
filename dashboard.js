@@ -1,8 +1,8 @@
-// Import Firebase modules
+// Import the Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
-// Firebase configuration
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
   authDomain: "mymufti1080.firebaseapp.com",
@@ -17,41 +17,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Get references to HTML elements
+// Get references to the HTML elements
 const fetchDataButton = document.getElementById('fetchDataButton');
-const dataDisplay = document.getElementById('dataDisplay');
+const titleDisplay = document.getElementById('title');
+const descriptionDisplay = document.getElementById('description');
 
-// Add event listener to fetch data
+// Add event listener to the button
 fetchDataButton.addEventListener('click', async () => {
+  // Specify the collection and document to fetch data from
+  const docRef = doc(db, "Toheed", "Mazhab");
+
+  // Fetch the document data
   try {
-    // Clear previous data
-    dataDisplay.innerHTML = "";
-
-    // Fetch all documents from the "Toheed" collection
-    const querySnapshot = await getDocs(collection(db, "Toheed"));
-
-    // If collections exist, loop through each document
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const title = data.title || "No title available";
-      const description = data.description || "No description available";
-
-      // Create HTML elements for each document
-      const documentElement = document.createElement('div');
-      const titleElement = document.createElement('h2');
-      const descriptionElement = document.createElement('p');
-
-      titleElement.innerText = `Title: ${title}`;
-      descriptionElement.innerText = `Description: ${description}`;
-
-      documentElement.appendChild(titleElement);
-      documentElement.appendChild(descriptionElement);
-
-      // Append the document to the data display section
-      dataDisplay.appendChild(documentElement);
-    });
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      // Display the data in the HTML
+      titleDisplay.innerText = `Title: ${data.title}`;
+      descriptionDisplay.innerText = `Description: ${data.description}`;
+    } else {
+      console.log("No such document!");
+      titleDisplay.innerText = "Document not found";
+      descriptionDisplay.innerText = "Please check if the 'Toheed' collection and 'Mazhab' document exist.";
+    }
   } catch (error) {
     console.error("Error fetching data:", error);
-    dataDisplay.innerHTML = "<h2>Error fetching data</h2><p>" + error.message + "</p>";
+    titleDisplay.innerText = "Error fetching data";
+    descriptionDisplay.innerText = `Error: ${error.message}`;
   }
 });
