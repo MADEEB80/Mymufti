@@ -56,15 +56,27 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error("Firestore not initialized. Check your configuration.");
     return;
   }
-
+	
+	const questionInput = document.querySelector('textarea#question');
+	
+	if (!questionInput) {
+	
+	console.error("Textarea with ID 'question' not found.");
+	
+	return;
+	
+	}
+	
+	
   const questionForm = document.getElementById('questionForm');
-  const questionInput = document.getElementById('question');
   const submitButton = questionForm?.querySelector('button[type="submit"]');
+
+
 
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const questionText = questionInput.value.trim();
+	const questionText = questionInput?.value?.trim();
     if (!questionText) {
       alert("Please enter a question.");
       return;
