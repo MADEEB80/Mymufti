@@ -1,6 +1,6 @@
 // Import the Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -21,6 +21,18 @@ const db = getFirestore(app);
 const fetchDataButton = document.getElementById('fetchDataButton');
 const titleDisplay = document.getElementById('title');
 const descriptionDisplay = document.getElementById('description');
+
+// Collection reference
+const colRef = collection(db, "Mazhab");
+
+// Get collection data (optional: log the collection data for debugging)
+getDocs(colRef)
+  .then((snapshot) => {
+    console.log(snapshot.docs);
+  })
+  .catch((error) => {
+    console.error("Error fetching collection data:", error);
+  });
 
 // Add event listener to the button
 fetchDataButton.addEventListener('click', async () => {
