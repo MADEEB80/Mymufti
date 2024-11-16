@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     event.preventDefault(); // Prevent form submission from reloading the page
 
     // Trimmed value of questionInput
-      const questionText = questionInput?.value?.trim();
+      const questionText = questionInput.value;
     if (!questionText) {
       alert("Please enter a question!");
       return;
