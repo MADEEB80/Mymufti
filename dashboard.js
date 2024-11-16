@@ -57,16 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
 
-  if (!questionForm || !questionInput) {
-    console.error("Form or question input element not found in the DOM.");
+  if (!questionInput) {
+    console.error("Textarea with ID 'question' not found.");
     return;
   }
 
   questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form reload
+    event.preventDefault();
 
-    // Debug: Log the raw and trimmed values
-    console.log("Raw input value:", questionInput.value);
     const questionText = questionInput.value.trim();
     console.log("Trimmed input value:", questionText);
 
@@ -75,19 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Submission logic here
     try {
-      const docRef = await addDoc(collection(db, "Questions"), {
-        question: questionText,
-        createdAt: new Date(),
-      });
-
-      console.log("Document written with ID: ", docRef.id);
+      // Replace this with your database logic
+      console.log("Question submitted:", questionText);
       alert("Your question has been submitted successfully!");
-      questionInput.value = ""; // Clear the form
+      questionInput.value = ""; // Clear the textarea
     } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("There was an error submitting your question. Please try again.");
+      console.error("Error submitting question:", error);
+      alert("There was an error. Please try again.");
     }
   });
 });
