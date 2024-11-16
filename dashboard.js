@@ -50,11 +50,13 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
 
-  // Check if elements exist
   if (!questionForm || !questionInput) {
     console.error("Form or question input element not found in the DOM.");
     return;
@@ -63,13 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form reload
 
-    // Check if questionInput has a value property before calling trim
-    const questionText = questionInput?.value?.trim();
+    // Debug: Log the raw and trimmed values
+    console.log("Raw input value:", questionInput.value);
+    const questionText = questionInput.value.trim();
+    console.log("Trimmed input value:", questionText);
+
     if (!questionText) {
       alert("Please enter a question!");
       return;
     }
 
+    // Submission logic here
     try {
       const docRef = await addDoc(collection(db, "Questions"), {
         question: questionText,
