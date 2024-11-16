@@ -50,30 +50,30 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
 
-  // Check if essential elements exist
+  // Check if elements exist
   if (!questionForm || !questionInput) {
-    console.error("Required form or input elements not found.");
+    console.error("Form or question input element not found in the DOM.");
     return;
   }
 
   questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form submission from reloading the page
+    event.preventDefault(); // Prevent form reload
 
-    const questionText = questionInput.value.trim(); // Trim whitespace
+    // Check if questionInput has a value property before calling trim
+    const questionText = questionInput?.value?.trim();
     if (!questionText) {
       alert("Please enter a question!");
       return;
     }
 
-    // Proceed with submission logic if questionText is valid
     try {
       const docRef = await addDoc(collection(db, "Questions"), {
         question: questionText,
-        createdAt: serverTimestamp(), // Use server timestamp for accuracy
+        createdAt: new Date(),
       });
 
       console.log("Document written with ID: ", docRef.id);
