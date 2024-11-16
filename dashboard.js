@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Trimmed value of questionInput
       const questionText = questionInput.value;
+	  alert(questionText)
     if (!questionText) {
       alert("Please enter a question!");
       return;
