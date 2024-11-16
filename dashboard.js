@@ -1,10 +1,8 @@
-// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
+  apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvN3c",
   authDomain: "mymufti1080.firebaseapp.com",
   projectId: "mymufti1080",
   storageBucket: "mymufti1080.appspot.com",
@@ -13,74 +11,56 @@ const firebaseConfig = {
   measurementId: "G-LY1D6LNG6F"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// DOM references
-const fetchDataButton = document.getElementById('fetchDataButton');
-const titleDisplay = document.getElementById('title');
-const descriptionDisplay = document.getElementById('description');
-const questionDisplay = document.getElementById('question');
-const answerDisplay = document.getElementById('answer');
-
-// Fetch document data and display
-fetchDataButton.addEventListener('click', async () => {
+document.getElementById('fetchDataButton').addEventListener('click', async () => {
   const docRef = doc(db, "Mazhab", "Toheed");
-  console.log("Fetching document:", docRef.path);
-
   try {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      console.log("Document data:", data);
-      titleDisplay.innerText = `Title: ${data.title || "No title available"}`;
-      descriptionDisplay.innerText = `Description: ${data.description || "No description available"}`;
-      questionDisplay.innerText = `Question: ${data.Question || "No question available"}`;
-      answerDisplay.innerText = `Answer: ${data.Answer || "No answer available"}`;
+      document.getElementById('title').innerText = `Title: ${data.title || "No title available"}`;
+      document.getElementById('description').innerText = `Description: ${data.description || "No description available"}`;
+      document.getElementById('question').innerText = `Question: ${data.Question || "No question available"}`;
+      document.getElementById('answer').innerText = `Answer: ${data.Answer || "No answer available"}`;
     } else {
-      console.log("No such document found.");
-      titleDisplay.innerText = "Document not found";
-      descriptionDisplay.innerText = "Please ensure 'Mazhab' collection and 'Toheed' document exist.";
+      alert("Document not found!");
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
-    titleDisplay.innerText = "Error fetching data";
-    descriptionDisplay.innerText = `Error: ${error.message}`;
+    console.error("Error fetching document:", error);
+    alert("Error fetching data!");
   }
 });
 
+// Form submission handler
+document.getElementById('questionForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+  // Get the question input value
+  const questionText = document.getElementById('question').value.trim();
 
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const questionForm = document.getElementById('questionForm');
-  const questionInput = document.getElementById('question');
-
-  if (!questionInput) {
-    console.error("Textarea with ID 'question' not found.");
+  // Check if the question is valid
+  if (!questionText) {
+    alert("Please enter a question!");
     return;
   }
 
-  questionForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  // Proceed with submission logic if questionText is valid
+  try {
+    const docRef = await addDoc(collection(db, "Questions"), {
+      question: questionText,
+      createdAt: new Date(),
+    });
+    
+    // Inform the user that the question was submitted successfully
+    alert("Your question has been submitted successfully!");
+    
+    // Clear the form input after submission
+    document.getElementById('question').value = "";
 
-    const questionText = questionInput.value.trim();
-    console.log("Trimmed input value:", questionText);
-
-    if (!questionText) {
-      alert("Please enter a question!");
-      return;
-    }
-
-    try {
-      // Replace this with your database logic
-      console.log("Question submitted:", questionText);
-      alert("Your question has been submitted successfully!");
-      questionInput.value = ""; // Clear the textarea
-    } catch (error) {
-      console.error("Error submitting question:", error);
-      alert("There was an error. Please try again.");
-    }
-  });
+  } catch (error) {
+    console.error("Error submitting question: ", error);
+    alert("There was an error submitting your question. Please try again.");
+  }
 });
