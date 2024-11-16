@@ -54,18 +54,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionForm = document.getElementById('questionForm');
   const questionInput = document.getElementById('question');
 
-  // Check if questionInput is properly defined
-  if (!questionInput) {
-    console.error("Element with ID 'question' not found.");
+  // Check if essential elements exist
+  if (!questionForm || !questionInput) {
+    console.error("Required form or input elements not found.");
     return;
   }
 
   questionForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form submission from reloading the page
 
-    // Trimmed value of questionInput
-      const questionText = questionInput.value;
-	  alert(questionText)
+    const questionText = questionInput.value.trim(); // Trim whitespace
     if (!questionText) {
       alert("Please enter a question!");
       return;
@@ -75,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const docRef = await addDoc(collection(db, "Questions"), {
         question: questionText,
-        createdAt: new Date(),
+        createdAt: serverTimestamp(), // Use server timestamp for accuracy
       });
 
       console.log("Document written with ID: ", docRef.id);
