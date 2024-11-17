@@ -230,7 +230,36 @@ document.getElementById("filterByTag").addEventListener("click", () => {
   if (tag) filterQuestionsByTag(tag);
 });
 
-// Event listener to display answer form
+// Assuming the functions are in a scope where they can be called globally.
+document.addEventListener("DOMContentLoaded", () => {
+  // Dynamically bind events after the DOM is fully loaded.
+
+  const answerButtons = document.querySelectorAll(".answerButton");
+  answerButtons.forEach(button => {
+    button.addEventListener("click", (event) => {
+      const questionId = event.target.dataset.questionId;
+      showAnswerForm(questionId);
+    });
+  });
+
+  const tagButtons = document.querySelectorAll(".tagButton");
+  tagButtons.forEach(button => {
+    button.addEventListener("click", (event) => {
+      const questionId = event.target.dataset.questionId;
+      showTagForm(questionId);
+    });
+  });
+
+  const commentButtons = document.querySelectorAll(".commentButton");
+  commentButtons.forEach(button => {
+    button.addEventListener("click", (event) => {
+      const questionId = event.target.dataset.questionId;
+      showCommentForm(questionId);
+    });
+  });
+});
+
+// Answer function
 function showAnswerForm(questionId) {
   const answerText = prompt("Enter your answer:");
   if (answerText) {
@@ -238,7 +267,7 @@ function showAnswerForm(questionId) {
   }
 }
 
-// Event listener to display tag form
+// Tag function
 function showTagForm(questionId) {
   const tags = prompt("Enter tags (comma separated):").split(",");
   if (tags.length > 0) {
@@ -246,10 +275,43 @@ function showTagForm(questionId) {
   }
 }
 
-// Event listener to display comment form
+// Comment function
 function showCommentForm(questionId) {
   const commentText = prompt("Enter your comment:");
   if (commentText) {
     addCommentToQuestion(questionId, commentText);
+  }
+}
+
+// These functions can remain the same or be redefined if needed
+async function answerQuestion(questionId, answerText) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, { answer: answerText, answered: true });
+    alert("Question answered!");
+  } catch (error) {
+    console.error("Error answering question:", error.message);
+  }
+}
+
+async function addTagsToQuestion(questionId, tags) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, { tags: arrayUnion(...tags) });
+    console.log(`Tags added to question ID: ${questionId}`);
+  } catch (error) {
+    console.error("Error adding tags to question:", error.message);
+  }
+}
+
+async function addCommentToQuestion(questionId, commentText) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, {
+      comments: arrayUnion({ text: commentText, timestamp: new Date() })
+    });
+    alert("Comment added!");
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
   }
 }
