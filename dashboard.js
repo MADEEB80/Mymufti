@@ -17,6 +17,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Submit question to Firestore
+document.getElementById("questionForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const questionText = document.getElementById("question").value;
+
+  try {
+    const docRef = await addDoc(collection(db, "Questions"), { question: questionText });
+    alert(`Question submitted! ID: ${docRef.id}`);
+    document.getElementById("questionForm").reset();
+  } catch (error) {
+    console.error("Error submitting question:", error);
+    alert("Error submitting your question. Please try again.");
+  }
+});
+
+
 // DOM references
 const fetchDataButton = document.getElementById("fetchDataButton");
 const titleDisplay = document.getElementById("title");
@@ -52,17 +68,3 @@ fetchDataButton.addEventListener("click", async () => {
   }
 });
 
-// Submit question to Firestore
-document.getElementById("questionForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const questionText = document.getElementById("question").value;
-
-  try {
-    const docRef = await addDoc(collection(db, "Questions"), { question: questionText });
-    alert(`Question submitted! ID: ${docRef.id}`);
-    document.getElementById("questionForm").reset();
-  } catch (error) {
-    console.error("Error submitting question:", error);
-    alert("Error submitting your question. Please try again.");
-  }
-});
