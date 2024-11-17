@@ -141,45 +141,26 @@ footer {
   </style>
 </head>
 <body>
-  <h1>Question Management</h1>
+ <h1>Question Management</h1>
 
   <h2>Submit a Question</h2>
   <form id="questionForm">
-          <textarea 
-        id="askquestion" 
-        rows="4" 
-        placeholder="Type your question..." 
-        required
-		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
-      ></textarea>
+    <textarea id="askquestion" rows="3" placeholder="Type your question here"></textarea>
     <br>
-    <button type="submit" class="button">Submit</button>
+    <button type="submit">Submit</button>
   </form>
 
   <h2>Manage Questions</h2>
-  <button id="fetchUserQuestions" class="button">List User Questions</button>
-  <button id="fetchAllQuestions" class="button" >List All Questions</button>
-  <button id="fetchUnansweredQuestions" class="button">List Unanswered Questions</button>
-  <button id="fetchAnsweredQuestions" class="button">List Answered Questions</button>
+  <button id="fetchAllQuestions">List All Questions</button>
+  <input type="text" id="searchQuery" placeholder="Search questions by keyword" />
+  <button id="searchQuestions">Search Questions</button>
+  
+  <h2>Tag Filtering</h2>
+  <input type="text" id="filterTag" placeholder="Enter a tag to filter" />
+  <button id="filterByTag">Filter by Tag</button>
 
   <div id="output"></div>
-
-<section class="question-form">
-  <h2>Ask Your Question</h2>
-  <form id="questionForm">
-    <div class="form-group">
-      <label for="askquestion">Your Question:</label>
-      <textarea 
-        id="askquestion" 
-        rows="4" 
-        placeholder="Type your question..." 
-        required
-		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
-      ></textarea>
-    </div>
-    <button type="submit" class="button">Submit Question</button>
-  </form>
-</section>
+  <div id="searchResults"></div>
 
   <section class="featured">
     <div class="featured-card">
