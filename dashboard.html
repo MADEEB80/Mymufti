@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<base href="https://mymufti.com/">
+<base href="Mymufti.com.eng">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MyMufti - Islamic Guidance</title>
 <style>
 :root {
   --primary: #2C3E50;
-  --accent: #27AE60;
+  --accent: #27AE60;  
   --text: #34495E;
   --light: #ECF0F1;
 }
@@ -18,38 +18,26 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text);
-  background-color: var(--light);
 }
 
-header, footer {
+.header {
   background: var(--primary);
   color: white;
+  padding: 1rem;
   text-align: center;
-  padding: 1.5rem;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-header p {
-  margin: 0.5rem 0 0;
-  font-size: 1rem;
 }
 
 .nav {
   background: var(--light);
+  padding: 1rem;
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 2rem;
 }
 
 .nav a {
   color: var(--text);
   text-decoration: none;
-  font-weight: bold;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: 0.3s;
@@ -60,40 +48,17 @@ header p {
   color: white;
 }
 
-main {
+.main {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 .question-form {
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: vertical;
-}
-
-button {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .featured {
@@ -107,22 +72,30 @@ button:hover {
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-footer div {
-  margin-top: 1rem;
-}
-
-footer a {
+.button {
+  background: var(--accent);
   color: white;
-  margin: 0 0.5rem;
-  text-decoration: none;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-footer a:hover {
-  text-decoration: underline;
+.button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+footer {
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 4rem;
 }
 
 @media (max-width: 768px) {
@@ -130,72 +103,109 @@ footer a:hover {
     flex-direction: column;
     align-items: center;
   }
+  
   .featured {
     grid-template-columns: 1fr;
   }
-
-
+}
 </style>
 </head>
 <body>
-<header>
+<header class="header">
   <h1>MyMufti</h1>
   <p>Your Trusted Source for Islamic Guidance</p>
 </header>
 
 <nav class="nav">
-  <a href="home" aria-label="Home">Home</a>
-  <a href="ask" aria-label="Ask a Question">Ask a Question</a>
-  <a href="scholars" aria-label="Our Scholars">Our Scholars</a>
-  <a href="library" aria-label="Knowledge Library">Knowledge Library</a>
-  <a href="about" aria-label="About Us">About Us</a>
+  <a href="https://mymufti.com/home">Home</a>
+  <a href="https://mymufti.com/ask">Ask a Question</a>
+  <a href="https://mymufti.com/scholars">Our Scholars</a>
+  <a href="https://mymufti.com/library">Knowledge Library</a>
+  <a href="https://mymufti.com/about">About Us</a>
 </nav>
 
-<main>
-  <section>
-    <h2>Submit a Question</h2>
-    <form id="questionForm" class="question-form">
-      <textarea id="askquestion" rows="4" placeholder="Type your question..." required></textarea>
-      <button type="submit">Submit</button>
-    </form>
-  </section>
+<main class="main">
+ <title>Question List</title>
+  <style>
+    #output {
+      margin-top: 20px;
+    }
+    .question-list {
+      margin-bottom: 20px;
+    }
+    .question-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Question Management</h1>
 
-  <section>
-    <h2>Manage Questions</h2>
-    <div>
-      <button id="fetchUserQuestions">List User Questions</button>
-      <button id="fetchAllQuestions">List All Questions</button>
-      <button id="fetchUnansweredQuestions">List Unanswered Questions</button>
-      <button id="fetchAnsweredQuestions">List Answered Questions</button>
+  <h2>Submit a Question</h2>
+  <form id="questionForm">
+          <textarea 
+        id="askquestion" 
+        rows="4" 
+        placeholder="Type your question..." 
+        required
+		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+      ></textarea>
+    <br>
+    <button type="submit" class="button">Submit</button>
+  </form>
+
+  <h2>Manage Questions</h2>
+  <button id="fetchUserQuestions" class="button">List User Questions</button>
+  <button id="fetchAllQuestions" class="button" >List All Questions</button>
+  <button id="fetchUnansweredQuestions" class="button">List Unanswered Questions</button>
+  <button id="fetchAnsweredQuestions" class="button">List Answered Questions</button>
+
+  <div id="output"></div>
+
+<section class="question-form">
+  <h2>Ask Your Question</h2>
+  <form id="questionForm">
+    <div class="form-group">
+      <label for="askquestion">Your Question:</label>
+      <textarea 
+        id="askquestion" 
+        rows="4" 
+        placeholder="Type your question..." 
+        required
+		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+      ></textarea>
     </div>
-    <div id="output"></div>
-  </section>
+    <button type="submit" class="button">Submit Question</button>
+  </form>
+</section>
 
   <section class="featured">
-    <article class="featured-card">
+    <div class="featured-card">
       <h3>Featured Fatwa</h3>
       <p>Understanding the importance of Zakat in modern times and its calculation methods.</p>
-      <a href="fatwas/zakat" class="button">Read More</a>
-    </article>
-    <article class="featured-card">
+      <a href="https://mymufti.com/fatwas/zakat" class="button">Read More</a>
+    </div>
+    <div class="featured-card">
       <h3>Scholar of the Month</h3>
       <p>Meet Sheikh Abdullah Ahmad, expert in Islamic jurisprudence and contemporary fiqh issues.</p>
-      <a href="scholars/abdullah-ahmad" class="button">Learn More</a>
-    </article>
-    <article class="featured-card">
+      <a href="https://mymufti.com/scholars/abdullah-ahmad" class="button">Learn More</a>
+    </div>
+    <div class="featured-card">
       <h3>Latest Articles</h3>
       <p>Explore our recent publications on Islamic ethics, family life, and worship.</p>
-      <a href="articles" class="button">Browse Articles</a>
-    </article>
+      <a href="https://mymufti.com/articles" class="button">Browse Articles</a>
+    </div>
   </section>
 </main>
 
 <footer>
   <p>MyMufti © 2024 - Providing Authentic Islamic Guidance</p>
   <div>
-    <a href="privacy">Privacy Policy</a>
-    <a href="terms">Terms of Service</a>
-    <a href="contact">Contact Us</a>
+    <a href="https://mymufti.com/privacy" style="color: white; margin: 0 1rem;">Privacy Policy</a>
+    <a href="https://mymufti.com/terms" style="color: white; margin: 0 1rem;">Terms of Service</a>
+    <a href="https://mymufti.com/contact" style="color: white; margin: 0 1rem;">Contact Us</a>
   </div>
 </footer>
 
