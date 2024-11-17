@@ -1,114 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<base href="Mymufti.com.eng">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyMufti - Islamic Guidance</title>
-<style>
-:root {
-  --primary: #2C3E50;
-  --accent: #27AE60;  
-  --text: #34495E;
-  --light: #ECF0F1;
-}
+  <base href="Mymufti.com.eng">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyMufti - Islamic Guidance</title>
+  <style>
+    :root {
+      --primary: #2C3E50;
+      --accent: #27AE60;  
+      --text: #34495E;
+      --light: #ECF0F1;
+    }
 
-body {
-  font-family: 'Noto Sans', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: var(--text);
-}
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+    }
 
-.header {
-  background: var(--primary);
-  color: white;
-  padding: 1rem;
-  text-align: center;
-}
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
 
-.nav {
-  background: var(--light);
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-}
+    .nav {
+      background: var(--light);
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
 
-.nav a {
-  color: var(--text);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: 0.3s;
-}
+    .nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
 
-.nav a:hover {
-  background: var(--accent);
-  color: white;
-}
+    .nav a:hover {
+      background: var(--accent);
+      color: white;
+    }
 
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
 
-.question-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    .question-form {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-.featured {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
+    .featured {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
 
-.featured-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    .featured-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-.button {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    .button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-.button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
+    .button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
 
-footer {
-  background: var(--primary);
-  color: white;
-  text-align: center;
-  padding: 2rem;
-  margin-top: 4rem;
-}
+    footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
+    }
 
-@media (max-width: 768px) {
-  .nav {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .featured {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .featured {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 <header class="header">
@@ -125,7 +125,7 @@ footer {
 </nav>
 
 <main class="main">
- <title>Question List</title>
+  <title>Question List</title>
   <style>
     #output {
       margin-top: 20px;
@@ -139,38 +139,36 @@ footer {
       margin-bottom: 5px;
     }
   </style>
-</head>
-<body>
+
   <h1>Question Management</h1>
 
   <h2>Submit a Question</h2>
   <form id="questionForm">
-          <textarea 
-        id="askquestion" 
-        rows="4" 
-        placeholder="Type your question..." 
-        required
-		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
-      ></textarea>
+    <textarea 
+      id="askquestion" 
+      rows="4" 
+      placeholder="Type your question..." 
+      required
+      style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+    ></textarea>
     <br>
     <button type="submit" class="button">Submit</button>
   </form>
 
   <h2>Manage Questions</h2>
   <button id="fetchUserQuestions" class="button">List User Questions</button>
-  <button id="fetchAllQuestions" class="button" >List All Questions</button>
+  <button id="fetchAllQuestions" class="button">List All Questions</button>
   <button id="fetchUnansweredQuestions" class="button">List Unanswered Questions</button>
   <button id="fetchAnsweredQuestions" class="button">List Answered Questions</button>
-<br>
+  <br>
 
   <div id="output"></div>
-<br>
-<br>
+  <br>
+  
   <h2>Search Questions</h2>
-
   <input type="text" id="searchQuery" placeholder="Search questions by keyword" />
   <button id="searchQuestions">Search Questions</button>
-  
+
   <h2>Tag Filtering</h2>
   <input type="text" id="filterTag" placeholder="Enter a tag to filter" />
   <button id="filterByTag">Filter by Tag</button>
@@ -194,6 +192,20 @@ footer {
       <a href="https://mymufti.com/articles" class="button">Browse Articles</a>
     </div>
   </section>
+
+  <!-- Answer Section -->
+  <h2>Answer a Question</h2>
+  <div id="questionList"></div>
+  <h3>Provide Your Answer</h3>
+  <textarea 
+    id="answer" 
+    rows="4" 
+    placeholder="Write your answer here..." 
+    required
+    style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+  ></textarea>
+  <br>
+  <button id="submitAnswer" class="button">Submit Answer</button>
 </main>
 
 <footer>
