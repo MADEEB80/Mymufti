@@ -270,20 +270,6 @@ document.getElementById("fetchAnsweredQuestions").addEventListener("click", asyn
 });
 
 
-
-// Add tags to a question
-async function addTagsToQuestion(questionId, tags) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, {
-      tags: tags // Array of tags
-    });
-    alert(`Tags added to question ID: ${questionId}`);
-  } catch (error) {
-    console.error("Error adding tags to question:", error.message);
-  }
-}
-
 // Search questions by keyword
 async function searchQuestions(keyword) {
   try {
