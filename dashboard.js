@@ -133,6 +133,9 @@ function renderQuestions(title, questions, containerId = "output") {
         <div>Tags: ${q.tags ? q.tags.join(", ") : "No tags"}</div>
         <div>Answer: ${q.answer || "No answer yet."}</div>
         <div>Comments: ${q.comments ? q.comments.map(c => c.text).join(", ") : "No comments yet."}</div>
+        <button onclick="showAnswerForm('${q.id}')">Answer</button>
+        <button onclick="showTagForm('${q.id}')">Add Tags</button>
+        <button onclick="showCommentForm('${q.id}')">Add Comment</button>
       `;
       listContainer.appendChild(questionItem);
     });
@@ -226,3 +229,27 @@ document.getElementById("filterByTag").addEventListener("click", () => {
   const tag = document.getElementById("filterTag").value.trim();
   if (tag) filterQuestionsByTag(tag);
 });
+
+// Event listener to display answer form
+function showAnswerForm(questionId) {
+  const answerText = prompt("Enter your answer:");
+  if (answerText) {
+    answerQuestion(questionId, answerText);
+  }
+}
+
+// Event listener to display tag form
+function showTagForm(questionId) {
+  const tags = prompt("Enter tags (comma separated):").split(",");
+  if (tags.length > 0) {
+    addTagsToQuestion(questionId, tags.map(tag => tag.trim()));
+  }
+}
+
+// Event listener to display comment form
+function showCommentForm(questionId) {
+  const commentText = prompt("Enter your comment:");
+  if (commentText) {
+    addCommentToQuestion(questionId, commentText);
+  }
+}
