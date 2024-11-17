@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 
 // Firebase configuration
@@ -25,7 +25,7 @@ let currentUserId = null;
 // Monitor authentication state
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUserId = user.uid; // Firebase-generated unique user ID
+    currentUserId = user.uid;
     console.log("User logged in with ID:", currentUserId);
   } else {
     console.log("No user is signed in.");
@@ -53,7 +53,7 @@ async function signUpUser(email, password) {
   }
 }
 
-// 1. Submit Question
+// Submit Question
 document.getElementById("questionForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -73,271 +73,44 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
   try {
     const docRef = await addDoc(collection(db, "Questions"), {
       question: questionText,
-      userId: currentUserId, // Automatically use Firebase `uid`
+      userId: currentUserId,
       answered: false,
       timestamp: new Date()
     });
     alert(`Question submitted! ID: ${docRef.id}`);
-    document.getElementById("questionForm").reset();
+    questionInput.value = ''; // Reset input field
   } catch (error) {
     console.error("Error submitting question:", error);
     alert("Error submitting your question. Please try again.");
   }
 });
 
-
-
-async function listUserQuestions(userId) {
+// List Questions based on specific conditions
+async function listQuestions(queryFilter = null) {
   try {
+    let q;
     const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("userId", "==", userId));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      console.log("No questions found for this user.");
+    
+    if (queryFilter) {
+      q = query(questionsRef, queryFilter);
     } else {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, "=>", doc.data());
-      });
+      q = query(questionsRef);
     }
-  } catch (error) {
-    console.error("Error fetching user's questions:", error.message);
-  }
-}
 
-
-
-async function listAllQuestions() {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const querySnapshot = await getDocs(questionsRef);
-
+    const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       console.log("No questions found.");
-    } else {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, "=>", doc.data());
-      });
+      return [];
     }
+
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
-    console.error("Error fetching all questions:", error.message);
+    console.error("Error fetching questions:", error.message);
+    return [];
   }
 }
-
-
-
-async function listUnansweredQuestions() {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("answered", "==", false));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      console.log("No unanswered questions found.");
-    } else {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, "=>", doc.data());
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching unanswered questions:", error.message);
-  }
-}
-
-
-async function listAnsweredQuestions() {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("answered", "==", true));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      console.log("No answered questions found.");
-    } else {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, "=>", doc.data());
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching answered questions:", error.message);
-  }
-}
-
-
-
-async function addTagsToQuestion(questionId, tags) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-
-    // Add or update the 'tags' field
-    await updateDoc(questionRef, {
-      tags: tags // Pass an array of tags
-    });
-
-    console.log(`Tags added to question ID: ${questionId}`);
-  } catch (error) {
-    console.error("Error adding tags to question:", error.message);
-  }
-}
-
-
-
 
 // Helper function to render questions in the DOM
-function renderQuestions1(title, questions) {
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = ""; // Clear previous output
-
-  const listTitle = document.createElement("h3");
-  listTitle.textContent = title;
-  outputDiv.appendChild(listTitle);
-
-  const listContainer = document.createElement("div");
-  listContainer.className = "question-list";
-
-  if (questions.length === 0) {
-    listContainer.textContent = "No questions found.";
-  } else {
-    questions.forEach((question) => {
-      const questionItem = document.createElement("div");
-      questionItem.className = "question-item";
-      questionItem.textContent = `${question.question} (Answered: ${question.answered})`;
-      listContainer.appendChild(questionItem);
-    });
-  }
-
-  outputDiv.appendChild(listContainer);
-}
-
-// Fetch user questions and display them
-document.getElementById("fetchUserQuestions").addEventListener("click", async () => {
-  if (!currentUserId) {
-    alert("Please log in first.");
-    return;
-  }
-
-  try {
-    const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("userId", "==", currentUserId));
-    const querySnapshot = await getDocs(q);
-
-    const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions1("User Questions", questions);
-  } catch (error) {
-    console.error("Error fetching user questions:", error.message);
-  }
-});
-
-// Fetch all questions and display them
-document.getElementById("fetchAllQuestions").addEventListener("click", async () => {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const querySnapshot = await getDocs(questionsRef);
-
-    const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions1("All Questions", questions);
-  } catch (error) {
-    console.error("Error fetching all questions:", error.message);
-  }
-});
-
-// Fetch unanswered questions and display them
-document.getElementById("fetchUnansweredQuestions").addEventListener("click", async () => {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("answered", "==", false));
-    const querySnapshot = await getDocs(q);
-
-    const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions1("Unanswered Questions", questions);
-  } catch (error) {
-    console.error("Error fetching unanswered questions:", error.message);
-  }
-});
-
-// Fetch answered questions and display them
-document.getElementById("fetchAnsweredQuestions").addEventListener("click", async () => {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const q = query(questionsRef, where("answered", "==", true));
-    const querySnapshot = await getDocs(q);
-
-    const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions1("Answered Questions", questions);
-  } catch (error) {
-    console.error("Error fetching answered questions:", error.message);
-  }
-});
-
-
-// Search questions by keyword
-async function searchQuestions(keyword) {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const querySnapshot = await getDocs(questionsRef);
-
-    const matchingQuestions = querySnapshot.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter((q) => q.question.toLowerCase().includes(keyword.toLowerCase()));
-
-    renderQuestions("Search Results", matchingQuestions, "searchResults");
-  } catch (error) {
-    console.error("Error searching questions:", error.message);
-  }
-}
-
-// Add comments to a question
-async function addCommentToQuestion(questionId, commentText) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, {
-      comments: arrayUnion({ text: commentText, timestamp: new Date() }) // Add comment
-    });
-    alert("Comment added!");
-  } catch (error) {
-    console.error("Error adding comment:", error.message);
-  }
-}
-
-// Answer a question
-async function answerQuestion(questionId, answerText) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, {
-      answer: answerText,
-      answered: true
-    });
-    alert("Question answered!");
-  } catch (error) {
-    console.error("Error answering question:", error.message);
-  }
-}
-
-// Filter questions by tag
-async function filterQuestionsByTag(tag) {
-  try {
-    const questionsRef = collection(db, "Questions");
-    const querySnapshot = await getDocs(questionsRef);
-
-    const taggedQuestions = querySnapshot.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter((q) => q.tags && q.tags.includes(tag));
-
-    renderQuestions(`Questions tagged with "${tag}"`, taggedQuestions);
-  } catch (error) {
-    console.error("Error filtering questions by tag:", error.message);
-  }
-}
-
-// Render comments for a question
-function renderComments(comments) {
-  if (!comments || comments.length === 0) return "No comments yet.";
-  return comments
-    .map((c) => `<div class="comment-item">${c.text} - ${new Date(c.timestamp).toLocaleString()}</div>`)
-    .join("");
-}
-
-// Render questions and comments
 function renderQuestions(title, questions, containerId = "output") {
   const outputDiv = document.getElementById(containerId);
   outputDiv.innerHTML = ""; // Clear previous output
@@ -355,16 +128,11 @@ function renderQuestions(title, questions, containerId = "output") {
     questions.forEach((q) => {
       const questionItem = document.createElement("div");
       questionItem.className = "question-item";
-
-      const tags = (q.tags || []).map((t) => `<span class="tag">${t}</span>`).join("");
-      const comments = renderComments(q.comments);
-
       questionItem.innerHTML = `
         <strong>${q.question}</strong> (Answered: ${q.answered})
-        <div>Tags: ${tags}</div>
+        <div>Tags: ${q.tags ? q.tags.join(", ") : "No tags"}</div>
         <div>Answer: ${q.answer || "No answer yet."}</div>
-        <div>Comments:</div>
-        ${comments}
+        <div>Comments: ${q.comments ? q.comments.map(c => c.text).join(", ") : "No comments yet."}</div>
       `;
       listContainer.appendChild(questionItem);
     });
@@ -373,12 +141,87 @@ function renderQuestions(title, questions, containerId = "output") {
   outputDiv.appendChild(listContainer);
 }
 
-// Event listeners
+// Event listeners for fetching questions
+document.getElementById("fetchUserQuestions").addEventListener("click", async () => {
+  if (!currentUserId) {
+    alert("Please log in first.");
+    return;
+  }
+  const questions = await listQuestions(query(where("userId", "==", currentUserId)));
+  renderQuestions("User Questions", questions);
+});
+
+document.getElementById("fetchAllQuestions").addEventListener("click", async () => {
+  const questions = await listQuestions();
+  renderQuestions("All Questions", questions);
+});
+
+document.getElementById("fetchUnansweredQuestions").addEventListener("click", async () => {
+  const questions = await listQuestions(query(where("answered", "==", false)));
+  renderQuestions("Unanswered Questions", questions);
+});
+
+document.getElementById("fetchAnsweredQuestions").addEventListener("click", async () => {
+  const questions = await listQuestions(query(where("answered", "==", true)));
+  renderQuestions("Answered Questions", questions);
+});
+
+// Search questions by keyword
+async function searchQuestions(keyword) {
+  const questions = await listQuestions();
+  const matchingQuestions = questions.filter((q) => q.question.toLowerCase().includes(keyword.toLowerCase()));
+  renderQuestions("Search Results", matchingQuestions, "searchResults");
+}
+
+// Event listeners for search
 document.getElementById("searchQuestions").addEventListener("click", () => {
   const query = document.getElementById("searchQuery").value.trim();
   if (query) searchQuestions(query);
 });
 
+// Add tags to a question
+async function addTagsToQuestion(questionId, tags) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, { tags: arrayUnion(...tags) });
+    console.log(`Tags added to question ID: ${questionId}`);
+  } catch (error) {
+    console.error("Error adding tags to question:", error.message);
+  }
+}
+
+// Add a comment to a question
+async function addCommentToQuestion(questionId, commentText) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, {
+      comments: arrayUnion({ text: commentText, timestamp: new Date() })
+    });
+    alert("Comment added!");
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
+  }
+}
+
+// Answer a question
+async function answerQuestion(questionId, answerText) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+    await updateDoc(questionRef, { answer: answerText, answered: true });
+    alert("Question answered!");
+  } catch (error) {
+    console.error("Error answering question:", error.message);
+  }
+}
+
+// Filter questions by tag
+async function filterQuestionsByTag(tag) {
+  const questions = await listQuestions();
+  const taggedQuestions = questions.filter((q) => q.tags && q.tags.includes(tag));
+  renderQuestions(`Questions tagged with "${tag}"`, taggedQuestions);
+}
+
+// Event listeners for tag filtering
 document.getElementById("filterByTag").addEventListener("click", () => {
   const tag = document.getElementById("filterTag").value.trim();
   if (tag) filterQuestionsByTag(tag);
