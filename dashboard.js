@@ -20,18 +20,25 @@ const db = getFirestore(app);
 // Submit question to Firestore
 document.getElementById("questionForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const questionText = document.getElementById("question").value;
+  
+  const questionInput = document.getElementById("askquestion");
+  const questionText = questionInput.value.trim(); // trim to remove any extra spaces
+
+  // Validate that the question input is not empty
+  if (!questionText) {
+    alert("Please enter a question before submitting.");
+    return;
+  }
 
   try {
     const docRef = await addDoc(collection(db, "Questions"), { question: questionText });
     alert(`Question submitted! ID: ${docRef.id}`);
-    document.getElementById("questionForm").reset();
+    document.getElementById("questionForm").reset(); // Reset the form after successful submission
   } catch (error) {
     console.error("Error submitting question:", error);
     alert("Error submitting your question. Please try again.");
   }
 });
-
 
 // DOM references
 const fetchDataButton = document.getElementById("fetchDataButton");
