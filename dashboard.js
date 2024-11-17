@@ -50,34 +50,39 @@ fetchDataButton.addEventListener('click', async () => {
   }
 });
 
-// Form submission handler
-document.getElementById('questionForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  
-  // Get the question input value
-  const questionText = document.getElementById('question').value.trim();
 
-  // Check if the question is valid
-  if (!questionText) {
-    alert("Please enter a question!");
-    return;
-  }
 
-  // Proceed with submission logic if questionText is valid
+
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
+  authDomain: "mymufti1080.firebaseapp.com",
+  projectId: "mymufti1080",
+  storageBucket: "mymufti1080.appspot.com",
+  messagingSenderId: "558044786458",
+  appId: "1:558044786458:web:df4441667e5d71c1dcc6a3",
+  measurementId: "G-LY1D6LNG6F"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Submit question to Firestore
+document.getElementById('questionForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const questionText = document.getElementById('question').value;
+
   try {
-    const docRef = await addDoc(collection(db, "Questions"), {
-      question: questionText,
-      createdAt: new Date(),
-    });
-    
-    // Inform the user that the question was submitted successfully
-    alert("Your question has been submitted successfully!");
-    
-    // Clear the form input after submission
-    document.getElementById('question').value = "";
-
+    const docRef = await addDoc(collection(db, "Questions"), { question: questionText });
+    alert(`Question submitted! ID: ${docRef.id}`);
+    document.getElementById('questionForm').reset();
   } catch (error) {
-    console.error("Error submitting question: ", error);
-    alert("There was an error submitting your question. Please try again.");
+    console.error("Error submitting question:", error);
+    alert("Error submitting your question. Please try again.");
   }
 });
