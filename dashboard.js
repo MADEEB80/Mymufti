@@ -179,3 +179,12 @@ async function addTagsToQuestion(questionId, tags) {
     console.error("Error adding tags to question:", error.message);
   }
 }
+
+
+
+// Event Listeners for Additional Features
+document.getElementById("fetchUserQuestions").addEventListener("click", listUserQuestions);
+
+document.getElementById("fetchAllQuestions").addEventListener("click", listAllQuestions);
+
+document.getElementById("fetchUnansweredQuestions").addEventListener("click", listUnansweredQuestions);
