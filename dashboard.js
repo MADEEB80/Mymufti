@@ -1,6 +1,7 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,6 +17,24 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Global variable to store the current user's ID
+let currentUserId = null;
+
+// Authenticate user (anonymous sign-in)
+signInAnonymously(auth).catch((error) => {
+  console.error("Authentication error:", error);
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUserId = user.uid; // Automatically assigned user ID
+    console.log("User ID:", currentUserId);
+  } else {
+    console.log("No user is signed in.");
+  }
+});
 
 // 1. Submit Question
 document.getElementById("questionForm").addEventListener("submit", async (e) => {
@@ -24,18 +43,22 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
   const questionInput = document.getElementById("askquestion");
   const questionText = questionInput.value.trim();
 
-  // Validate input
   if (!questionText) {
     alert("Please enter a question before submitting.");
+    return;
+  }
+
+  if (!currentUserId) {
+    alert("Unable to identify user. Please try again.");
     return;
   }
 
   try {
     const docRef = await addDoc(collection(db, "Questions"), {
       question: questionText,
-      userId: "exampleUserId", // Replace with actual user ID if available
-      answered: false, // New questions are unanswered by default
-      timestamp: new Date() // Store submission time
+      userId: currentUserId, // Automatically assigned user ID
+      answered: false,
+      timestamp: new Date()
     });
     alert(`Question submitted! ID: ${docRef.id}`);
     document.getElementById("questionForm").reset();
@@ -46,8 +69,13 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
 });
 
 // 2. List Questions of a Specific User
-async function listUserQuestions(userId) {
-  const q = query(collection(db, "Questions"), where("userId", "==", userId));
+async function listUserQuestions() {
+  if (!currentUserId) {
+    alert("Unable to identify user. Please try again.");
+    return;
+  }
+
+  const q = query(collection(db, "Questions"), where("userId", "==", currentUserId));
   try {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -84,10 +112,8 @@ async function listUnansweredQuestions() {
   }
 }
 
-// Example Usage
-document.getElementById("fetchUserQuestions").addEventListener("click", () => {
-  listUserQuestions("exampleUserId"); // Replace with dynamic user ID
-});
+// Event Listeners for Additional Features
+document.getElementById("fetchUserQuestions").addEventListener("click", listUserQuestions);
 
 document.getElementById("fetchAllQuestions").addEventListener("click", listAllQuestions);
 
