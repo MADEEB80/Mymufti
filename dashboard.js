@@ -283,35 +283,4 @@ function showCommentForm(questionId) {
   }
 }
 
-// These functions can remain the same or be redefined if needed
-async function answerQuestion(questionId, answerText) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, { answer: answerText, answered: true });
-    alert("Question answered!");
-  } catch (error) {
-    console.error("Error answering question:", error.message);
-  }
-}
 
-async function addTagsToQuestion(questionId, tags) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, { tags: arrayUnion(...tags) });
-    console.log(`Tags added to question ID: ${questionId}`);
-  } catch (error) {
-    console.error("Error adding tags to question:", error.message);
-  }
-}
-
-async function addCommentToQuestion(questionId, commentText) {
-  try {
-    const questionRef = doc(db, "Questions", questionId);
-    await updateDoc(questionRef, {
-      comments: arrayUnion({ text: commentText, timestamp: new Date() })
-    });
-    alert("Comment added!");
-  } catch (error) {
-    console.error("Error adding comment:", error.message);
-  }
-}
