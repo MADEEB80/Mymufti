@@ -1,7 +1,7 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -22,24 +22,41 @@ const auth = getAuth(app);
 // Global variable to store the current user's ID
 let currentUserId = null;
 
-// Authenticate user (anonymous sign-in)
-signInAnonymously(auth).catch((error) => {
-  console.error("Authentication error:", error);
-});
-
+// Monitor authentication state
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUserId = user.uid; // Automatically assigned user ID
-    console.log("User ID:", currentUserId);
+    currentUserId = user.uid; // Firebase-generated unique user ID
+    console.log("User logged in with ID:", currentUserId);
   } else {
     console.log("No user is signed in.");
+    // Optionally redirect to login page
   }
 });
+
+// User Login Function
+async function loginUser(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log("User logged in:", userCredential.user.uid);
+  } catch (error) {
+    console.error("Error logging in:", error.message);
+  }
+}
+
+// User Sign-Up Function
+async function signUpUser(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log("User signed up with ID:", userCredential.user.uid);
+  } catch (error) {
+    console.error("Error signing up:", error.message);
+  }
+}
 
 // 1. Submit Question
 document.getElementById("questionForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   const questionInput = document.getElementById("askquestion");
   const questionText = questionInput.value.trim();
 
@@ -49,14 +66,14 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
   }
 
   if (!currentUserId) {
-    alert("Unable to identify user. Please try again.");
+    alert("Unable to identify user. Please log in and try again.");
     return;
   }
 
   try {
     const docRef = await addDoc(collection(db, "Questions"), {
       question: questionText,
-      userId: currentUserId, // Automatically assigned user ID
+      userId: currentUserId, // Automatically use Firebase `uid`
       answered: false,
       timestamp: new Date()
     });
@@ -68,53 +85,97 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
   }
 });
 
-// 2. List Questions of a Specific User
-async function listUserQuestions() {
-  if (!currentUserId) {
-    alert("Unable to identify user. Please try again.");
-    return;
-  }
 
-  const q = query(collection(db, "Questions"), where("userId", "==", currentUserId));
+
+async function listUserQuestions(userId) {
   try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
+
+    if (querySnapshot.empty) {
+      console.log("No questions found for this user.");
+    } else {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+      });
+    }
   } catch (error) {
-    console.error("Error fetching user's questions:", error);
+    console.error("Error fetching user's questions:", error.message);
   }
 }
 
-// 3. List All Questions
+
+
 async function listAllQuestions() {
-  const q = query(collection(db, "Questions"));
   try {
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
+    const questionsRef = collection(db, "Questions");
+    const querySnapshot = await getDocs(questionsRef);
+
+    if (querySnapshot.empty) {
+      console.log("No questions found.");
+    } else {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+      });
+    }
   } catch (error) {
-    console.error("Error fetching all questions:", error);
+    console.error("Error fetching all questions:", error.message);
   }
 }
 
-// 4. List All Unanswered Questions
+
+
 async function listUnansweredQuestions() {
-  const q = query(collection(db, "Questions"), where("answered", "==", false));
   try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("answered", "==", false));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
+
+    if (querySnapshot.empty) {
+      console.log("No unanswered questions found.");
+    } else {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+      });
+    }
   } catch (error) {
-    console.error("Error fetching unanswered questions:", error);
+    console.error("Error fetching unanswered questions:", error.message);
   }
 }
 
-// Event Listeners for Additional Features
-document.getElementById("fetchUserQuestions").addEventListener("click", listUserQuestions);
 
-document.getElementById("fetchAllQuestions").addEventListener("click", listAllQuestions);
+async function listAnsweredQuestions() {
+  try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("answered", "==", true));
+    const querySnapshot = await getDocs(q);
 
-document.getElementById("fetchUnansweredQuestions").addEventListener("click", listUnansweredQuestions);
+    if (querySnapshot.empty) {
+      console.log("No answered questions found.");
+    } else {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching answered questions:", error.message);
+  }
+}
+
+
+
+async function addTagsToQuestion(questionId, tags) {
+  try {
+    const questionRef = doc(db, "Questions", questionId);
+
+    // Add or update the 'tags' field
+    await updateDoc(questionRef, {
+      tags: tags // Pass an array of tags
+    });
+
+    console.log(`Tags added to question ID: ${questionId}`);
+  } catch (error) {
+    console.error("Error adding tags to question:", error.message);
+  }
+}
