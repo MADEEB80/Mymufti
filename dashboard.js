@@ -51,6 +51,27 @@ fetchDataButton.addEventListener('click', async () => {
 });
 
 
+
+
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCMk112qoe44Ac81SjvAd4Y9XLvNwwtN3c",
+  authDomain: "mymufti1080.firebaseapp.com",
+  projectId: "mymufti1080",
+  storageBucket: "mymufti1080.appspot.com",
+  messagingSenderId: "558044786458",
+  appId: "1:558044786458:web:df4441667e5d71c1dcc6a3",
+  measurementId: "G-LY1D6LNG6F"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // Submit question to Firestore
 document.getElementById('questionForm').addEventListener('submit', async (e) => {
   e.preventDefault();
