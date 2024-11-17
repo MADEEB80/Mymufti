@@ -182,9 +182,92 @@ async function addTagsToQuestion(questionId, tags) {
 
 
 
-// Event Listeners for Additional Features
-document.getElementById("fetchUserQuestions").addEventListener("click", listUserQuestions);
 
-document.getElementById("fetchAllQuestions").addEventListener("click", listAllQuestions);
+// Helper function to render questions in the DOM
+function renderQuestions(title, questions) {
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerHTML = ""; // Clear previous output
 
-document.getElementById("fetchUnansweredQuestions").addEventListener("click", listUnansweredQuestions);
+  const listTitle = document.createElement("h3");
+  listTitle.textContent = title;
+  outputDiv.appendChild(listTitle);
+
+  const listContainer = document.createElement("div");
+  listContainer.className = "question-list";
+
+  if (questions.length === 0) {
+    listContainer.textContent = "No questions found.";
+  } else {
+    questions.forEach((question) => {
+      const questionItem = document.createElement("div");
+      questionItem.className = "question-item";
+      questionItem.textContent = `${question.question} (Answered: ${question.answered})`;
+      listContainer.appendChild(questionItem);
+    });
+  }
+
+  outputDiv.appendChild(listContainer);
+}
+
+// Fetch user questions and display them
+document.getElementById("fetchUserQuestions").addEventListener("click", async () => {
+  if (!currentUserId) {
+    alert("Please log in first.");
+    return;
+  }
+
+  try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("userId", "==", currentUserId));
+    const querySnapshot = await getDocs(q);
+
+    const questions = querySnapshot.docs.map((doc) => doc.data());
+    renderQuestions("User Questions", questions);
+  } catch (error) {
+    console.error("Error fetching user questions:", error.message);
+  }
+});
+
+// Fetch all questions and display them
+document.getElementById("fetchAllQuestions").addEventListener("click", async () => {
+  try {
+    const questionsRef = collection(db, "Questions");
+    const querySnapshot = await getDocs(questionsRef);
+
+    const questions = querySnapshot.docs.map((doc) => doc.data());
+    renderQuestions("All Questions", questions);
+  } catch (error) {
+    console.error("Error fetching all questions:", error.message);
+  }
+});
+
+// Fetch unanswered questions and display them
+document.getElementById("fetchUnansweredQuestions").addEventListener("click", async () => {
+  try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("answered", "==", false));
+    const querySnapshot = await getDocs(q);
+
+    const questions = querySnapshot.docs.map((doc) => doc.data());
+    renderQuestions("Unanswered Questions", questions);
+  } catch (error) {
+    console.error("Error fetching unanswered questions:", error.message);
+  }
+});
+
+// Fetch answered questions and display them
+document.getElementById("fetchAnsweredQuestions").addEventListener("click", async () => {
+  try {
+    const questionsRef = collection(db, "Questions");
+    const q = query(questionsRef, where("answered", "==", true));
+    const querySnapshot = await getDocs(q);
+
+    const questions = querySnapshot.docs.map((doc) => doc.data());
+    renderQuestions("Answered Questions", questions);
+  } catch (error) {
+    console.error("Error fetching answered questions:", error.message);
+  }
+});
+
+
+

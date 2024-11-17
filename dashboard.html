@@ -132,7 +132,38 @@ footer {
     <div id="question"></div>
     <div id="answer"></div>
   </div>
+ <title>Question List</title>
+  <style>
+    #output {
+      margin-top: 20px;
+    }
+    .question-list {
+      margin-bottom: 20px;
+    }
+    .question-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Question Management</h1>
 
+  <h2>Submit a Question</h2>
+  <form id="questionForm">
+    <textarea id="askquestion" rows="3" placeholder="Type your question here"></textarea>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Manage Questions</h2>
+  <button id="fetchUserQuestions">List User Questions</button>
+  <button id="fetchAllQuestions">List All Questions</button>
+  <button id="fetchUnansweredQuestions">List Unanswered Questions</button>
+  <button id="fetchAnsweredQuestions">List Answered Questions</button>
+
+  <div id="output"></div>
 <button id="fetchUserQuestions">List My Questions</button>
 <button id="fetchAllQuestions">List All Questions</button>
 <button id="fetchUnansweredQuestions">List Unanswered Questions</button>
