@@ -184,7 +184,7 @@ async function addTagsToQuestion(questionId, tags) {
 
 
 // Helper function to render questions in the DOM
-function renderQuestions(title, questions) {
+function renderQuestions1(title, questions) {
   const outputDiv = document.getElementById("output");
   outputDiv.innerHTML = ""; // Clear previous output
 
@@ -222,7 +222,7 @@ document.getElementById("fetchUserQuestions").addEventListener("click", async ()
     const querySnapshot = await getDocs(q);
 
     const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions("User Questions", questions);
+    renderQuestions1("User Questions", questions);
   } catch (error) {
     console.error("Error fetching user questions:", error.message);
   }
@@ -235,7 +235,7 @@ document.getElementById("fetchAllQuestions").addEventListener("click", async () 
     const querySnapshot = await getDocs(questionsRef);
 
     const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions("All Questions", questions);
+    renderQuestions1("All Questions", questions);
   } catch (error) {
     console.error("Error fetching all questions:", error.message);
   }
@@ -249,7 +249,7 @@ document.getElementById("fetchUnansweredQuestions").addEventListener("click", as
     const querySnapshot = await getDocs(q);
 
     const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions("Unanswered Questions", questions);
+    renderQuestions1("Unanswered Questions", questions);
   } catch (error) {
     console.error("Error fetching unanswered questions:", error.message);
   }
@@ -263,7 +263,7 @@ document.getElementById("fetchAnsweredQuestions").addEventListener("click", asyn
     const querySnapshot = await getDocs(q);
 
     const questions = querySnapshot.docs.map((doc) => doc.data());
-    renderQuestions("Answered Questions", questions);
+    renderQuestions1("Answered Questions", questions);
   } catch (error) {
     console.error("Error fetching answered questions:", error.message);
   }
