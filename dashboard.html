@@ -125,13 +125,6 @@ footer {
 </nav>
 
 <main class="main">
-  <button id="fetchDataButton">Fetch Data</button>
-  <div id="dataDisplay">
-    <div id="title"></div>
-    <div id="description"></div>
-    <div id="question"></div>
-    <div id="answer"></div>
-  </div>
  <title>Question List</title>
   <style>
     #output {
@@ -152,7 +145,13 @@ footer {
 
   <h2>Submit a Question</h2>
   <form id="questionForm">
-    <textarea id="askquestion" rows="3" placeholder="Type your question here"></textarea>
+          <textarea 
+        id="askquestion" 
+        rows="4" 
+        placeholder="Type your question..." 
+        required
+		style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+      ></textarea>
     <br>
     <button type="submit">Submit</button>
   </form>
@@ -164,10 +163,6 @@ footer {
   <button id="fetchAnsweredQuestions">List Answered Questions</button>
 
   <div id="output"></div>
-<button id="fetchUserQuestions">List My Questions</button>
-<button id="fetchAllQuestions">List All Questions</button>
-<button id="fetchUnansweredQuestions">List Unanswered Questions</button>
-
 
 <section class="question-form">
   <h2>Ask Your Question</h2>
